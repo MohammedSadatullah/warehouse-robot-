@@ -4,7 +4,7 @@
   <version>0.1.0</version>
   <description>ROS 2 Jazzy simulation package for GPS-free last-mile delivery robot research.</description>
 
-  <maintainer email="mdsad@example.com">mdsad</maintainer>
+  <maintainer email="mars.ciot@pes.edu">Mars CIOT</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

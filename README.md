@@ -1,17 +1,17 @@
-# Delivery Robot Sim
+# Delivery Robot Simulation
 
-ROS 2 Jazzy package skeleton for a GPS-free last-mile delivery robot project.
+`delivery_robot_sim` is a ROS 2 Jazzy simulation package for a GPS-free warehouse delivery robot workflow. The repository contains a custom Gazebo Harmonic warehouse world, a differential-drive robot description, SLAM bring-up files, and helper scripts for mapping and repeatable navigation experiments.
 
-## Current contents
+## Repository Highlights
 
-- `worlds/warehouse.sdf`: custom warehouse world with symmetric aisles and dynamic actors
-- `launch/warehouse_world.launch.py`: Gazebo Harmonic launch for the warehouse world
-- `urdf/delivery_robot.urdf.xacro`: placeholder robot model
-- `config/slam_toolbox_params.yaml`: bootstrap SLAM Toolbox parameters
-- `config/nav2_params.yaml`: bootstrap Nav2 parameters
-- `scripts/goal_runner.py`: placeholder experiment runner
+- Custom warehouse world in `worlds/warehouse_v2.sdf`
+- Gazebo launch in `launch/warehouse_world.launch.py`
+- Robot + SLAM bring-up in `launch/robot_bringup.launch.py`
+- Robot model in `urdf/delivery_robot.urdf.xacro`
+- Mapping and experiment helpers in `scripts/`
+- Example saved map output in `warehouse_map.yaml` and `warehouse_map.pgm`
 
-## Package layout
+## Project Structure
 
 ```text
 delivery_robot_sim/
@@ -23,22 +23,76 @@ delivery_robot_sim/
 |-- launch/
 |-- scripts/
 |-- urdf/
-`-- worlds/
+|-- worlds/
+|-- warehouse_map.pgm
+`-- warehouse_map.yaml
 ```
 
-## Ubuntu Jazzy bring-up
+## Requirements
+
+- Ubuntu with ROS 2 Jazzy
+- Gazebo Harmonic
+- `slam_toolbox`
+- `ros_gz_bridge`
+- `robot_state_publisher`
+- `rviz2`
+- `xacro`
+
+Optional:
+
+- `python3-gz-transport13` for scripted pedestrian motion in `dynamic_actors.py`
+
+## Build
 
 From your ROS 2 workspace:
 
 ```bash
 colcon build --packages-select delivery_robot_sim
 source install/setup.bash
+```
+
+## Running The Simulation
+
+Launch the warehouse world:
+
+```bash
 ros2 launch delivery_robot_sim warehouse_world.launch.py
 ```
 
-## Planned next steps
+Launch the robot state publisher, ROS/Gazebo bridge, SLAM Toolbox, and RViz:
 
-1. Replace the placeholder URDF with a differential-drive robot and 2D LiDAR.
-2. Spawn the robot into Gazebo and bridge `/scan`, `/tf`, and odometry topics.
-3. Add SLAM Toolbox online mapping and Nav2 navigation launch files.
-4. Implement automated trials and metrics logging for the paper.
+```bash
+ros2 launch delivery_robot_sim robot_bringup.launch.py
+```
+
+## Mapping Scripts
+
+The repository includes a few exploration options in `scripts/`:
+
+- `hardcoded_mapping_v3.py`: odometry-guided waypoint traversal for full warehouse coverage
+- `explore_warehouse.py`: reactive waypoint exploration with simple obstacle avoidance
+- `dynamic_actors.py`: moves pedestrian obstacles through scripted patrol paths
+- `goal_runner.py`: placeholder for repeatable Nav2 goal experiments
+
+Run the main mapping script:
+
+```bash
+python3 scripts/hardcoded_mapping_v3.py
+```
+
+Save the resulting map:
+
+```bash
+ros2 run nav2_map_server map_saver_cli -f ~/warehouse_map \
+  --ros-args -p save_map_timeout:=5000.0
+```
+
+## Notes
+
+- `WAREHOUSE_README.md` documents the world layout, symmetry rationale, and benchmark goals.
+- The repository currently tracks generated map artifacts for convenience; if you prefer a lighter repo, those can be regenerated and removed later.
+- The package name is `delivery_robot_sim` even though the local folder name is `mar`.
+
+## Ownership
+
+For repository access, add `mars.ciot@pes.edu` as an admin or contributor in the GitHub repository settings after the remote repository is created.

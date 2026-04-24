@@ -77,16 +77,20 @@ confuse these goals.
 ```text
 delivery_robot_sim/
 |-- worlds/
-|   `-- warehouse.sdf
+|   `-- warehouse_v2.sdf
 |-- launch/
-|   `-- warehouse_world.launch.py
+|   |-- warehouse_world.launch.py
+|   `-- robot_bringup.launch.py
 |-- urdf/
 |   `-- delivery_robot.urdf.xacro
 |-- config/
 |   |-- slam_toolbox_params.yaml
 |   `-- nav2_params.yaml
 `-- scripts/
-    `-- goal_runner.py
+    |-- dynamic_actors.py
+    |-- explore_warehouse.py
+    |-- goal_runner.py
+    `-- hardcoded_mapping_v3.py
 ```
 
 ## Quick sanity checks in Ubuntu

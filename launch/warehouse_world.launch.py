@@ -1,10 +1,4 @@
-"""
-Launch Gazebo Harmonic with the warehouse SDF world.
-
-This launch file is intentionally world-only for the first bootstrap stage.
-It starts Gazebo and bridges `/clock` so the package can be validated before
-adding the robot, SLAM, and Nav2 stacks.
-"""
+"""Launch Gazebo Harmonic with the warehouse world."""
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, SetEnvironmentVariable
@@ -15,7 +9,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     pkg_share = FindPackageShare("delivery_robot_sim")
-    world_file = PathJoinSubstitution([pkg_share, "worlds", "warehouse.sdf"])
+    world_file = PathJoinSubstitution([pkg_share, "worlds", "warehouse_v2.sdf"])
 
     paused = LaunchConfiguration("paused")
     verbose = LaunchConfiguration("verbose")
