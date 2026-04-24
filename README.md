@@ -33,21 +33,26 @@ Gazebo → SLAM → Map → AMCL → Nav2 → Metrics
 
 ## ⚙️ Setup Instructions
 
-### 1. Source ROS 2
-```bash
+1. Source ROS 2
+
 source /opt/ros/jazzy/setup.bash
+
 2. Launch Simulation
 export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
-3. Run SLAM (Mapping)
+
+4. Run SLAM (Mapping)
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=True
-4. Save Map
+
+6. Save Map
 ros2 run nav2_map_server map_saver_cli -f ~/final_map
-5. Run Navigation (AMCL + Nav2)
+
+8. Run Navigation (AMCL + Nav2)
 export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_navigation2 navigation2.launch.py \
 use_sim_time:=True \
 map:=/home/<your-username>/final_map.yaml
+
 🎮 Usage
 Open RViz
 Click 2D Pose Estimate to initialize robot
