@@ -1,98 +1,78 @@
-# Delivery Robot Simulation
+# 🚀 Autonomous Warehouse Robot (ROS 2)
 
-`delivery_robot_sim` is a ROS 2 Jazzy simulation package for a GPS-free warehouse delivery robot workflow. The repository contains a custom Gazebo Harmonic warehouse world, a differential-drive robot description, SLAM bring-up files, and helper scripts for mapping and repeatable navigation experiments.
+## 📌 Overview
+This project implements an autonomous mobile robot for warehouse navigation using ROS 2.  
+The robot performs mapping, localization, and navigation in a simulated environment.
 
-## Repository Highlights
+---
 
-- Custom warehouse world in `worlds/warehouse_v2.sdf`
-- Gazebo launch in `launch/warehouse_world.launch.py`
-- Robot + SLAM bring-up in `launch/robot_bringup.launch.py`
-- Robot model in `urdf/delivery_robot.urdf.xacro`
-- Mapping and experiment helpers in `scripts/`
-- Example saved map output in `warehouse_map.yaml` and `warehouse_map.pgm`
+## 🎯 Objectives
+- Perform SLAM-based mapping of the environment  
+- Localize the robot using AMCL  
+- Navigate to goal positions using Nav2  
+- Evaluate performance using metrics  
 
-## Project Structure
+---
 
-```text
-delivery_robot_sim/
-|-- CMakeLists.txt
-|-- package.xml
-|-- README.md
-|-- WAREHOUSE_README.md
-|-- config/
-|-- launch/
-|-- scripts/
-|-- urdf/
-|-- worlds/
-|-- warehouse_map.pgm
-`-- warehouse_map.yaml
-```
+## 🧠 System Pipeline
 
-## Requirements
+Gazebo → SLAM → Map → AMCL → Nav2 → Metrics
 
-- Ubuntu with ROS 2 Jazzy
-- Gazebo Harmonic
-- `slam_toolbox`
-- `ros_gz_bridge`
-- `robot_state_publisher`
-- `rviz2`
-- `xacro`
 
-Optional:
+---
 
-- `python3-gz-transport13` for scripted pedestrian motion in `dynamic_actors.py`
+## 🛠️ Technologies Used
+- ROS 2 (Jazzy)
+- Gazebo Simulator
+- RViz
+- Python
+- Nav2 Stack
+- slam_toolbox
 
-## Build
+---
 
-From your ROS 2 workspace:
+## ⚙️ Setup Instructions
 
+### 1. Source ROS 2
 ```bash
-colcon build --packages-select delivery_robot_sim
-source install/setup.bash
-```
+source /opt/ros/jazzy/setup.bash
+2. Launch Simulation
+export TURTLEBOT3_MODEL=burger
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+3. Run SLAM (Mapping)
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=True
+4. Save Map
+ros2 run nav2_map_server map_saver_cli -f ~/final_map
+5. Run Navigation (AMCL + Nav2)
+export TURTLEBOT3_MODEL=burger
+ros2 launch turtlebot3_navigation2 navigation2.launch.py \
+use_sim_time:=True \
+map:=/home/<your-username>/final_map.yaml
+🎮 Usage
+Open RViz
+Click 2D Pose Estimate to initialize robot
+Click 2D Goal Pose to send navigation goal
+📊 Metrics Evaluation
 
-## Running The Simulation
+Metrics logged include:
 
-Launch the warehouse world:
+Localization Error
+Travel Time
+Success Rate
+Replan Count
 
-```bash
-ros2 launch delivery_robot_sim warehouse_world.launch.py
-```
+Output file:
 
-Launch the robot state publisher, ROS/Gazebo bridge, SLAM Toolbox, and RViz:
+~/metrics_log.csv
+🔗 GitHub Repository
 
-```bash
-ros2 launch delivery_robot_sim robot_bringup.launch.py
-```
+https://github.com/MohammedSadatullah/warehouse-robot-
 
-## Mapping Scripts
+🧠 Conclusion
 
-The repository includes a few exploration options in `scripts/`:
+The project successfully demonstrates autonomous navigation using SLAM and Nav2.
+SLAM-based localization proved effective for indoor environments compared to baseline methods.
 
-- `hardcoded_mapping_v3.py`: odometry-guided waypoint traversal for full warehouse coverage
-- `explore_warehouse.py`: reactive waypoint exploration with simple obstacle avoidance
-- `dynamic_actors.py`: moves pedestrian obstacles through scripted patrol paths
-- `goal_runner.py`: placeholder for repeatable Nav2 goal experiments
+👨‍💻 Author
 
-Run the main mapping script:
-
-```bash
-python3 scripts/hardcoded_mapping_v3.py
-```
-
-Save the resulting map:
-
-```bash
-ros2 run nav2_map_server map_saver_cli -f ~/warehouse_map \
-  --ros-args -p save_map_timeout:=5000.0
-```
-
-## Notes
-
-- `WAREHOUSE_README.md` documents the world layout, symmetry rationale, and benchmark goals.
-- The repository currently tracks generated map artifacts for convenience; if you prefer a lighter repo, those can be regenerated and removed later.
-- The package name is `delivery_robot_sim` even though the local folder name is `mar`.
-
-## Ownership
-
-For repository access, add `mars.ciot@pes.edu` as an admin or contributor in the GitHub repository settings after the remote repository is created.
+Mohammed Sadatullah
